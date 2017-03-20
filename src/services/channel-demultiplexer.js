@@ -7,7 +7,7 @@ var Demultiplexer = {};
 Demultiplexer.send = function (session, msg) {
     var conversationId = JSON.stringify(session.message.address.conversation.id);
     var channel = ChannelMap.get(conversationId);
-    // console.log(conversationId)
+    console.log(conversationId)
     try {
         DiscordConnector.send(channel.id, msg);
     }
