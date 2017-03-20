@@ -1,3 +1,4 @@
+const disc = require('./../services/channel-demultiplexer');
 
 const responses = [
     "You're Welcome!",
@@ -5,5 +6,5 @@ const responses = [
 ]
 
 module.exports = function (session){
-    session.send(`${responses[Math.floor(Math.random() * responses.length)]}`)
+    disc.send(session, `${responses[Math.floor(Math.random() * responses.length)]}`)
 }

@@ -1,3 +1,5 @@
+const disc = require('./../services/channel-demultiplexer');
+
 module.exports = function (session){
-     session.send("Sorry that response is not supported")
+     disc.send(session, "Sorry that response is not supported")
 }

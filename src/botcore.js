@@ -3,7 +3,8 @@ const scenario = require('./dialogs');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const cfg = require("./../config.json");
-
+const disc = require('./services/channel-demultiplexer');
+var DiscordConnector = require('./services/discord-connector.js');
 var core = {};
 
 core.model = (process.env.LUIS_MODEL_API);
@@ -27,17 +28,28 @@ core.bot.dialog('/', core.dialog)
     .matches('Personal', [scenario.personal])
     .matches('Teaching', [scenario.teaching])
     .onDefault((session) => {
-        session.send('Sorry, \'%s\' is not recognized or supported currently', session.message.text)
+        disc.send(session, 'Sorry, \'%s\' is not recognized or supported currently', session.message.text)
     });
 
-bot.on('message', msg => {
-    if (!msg.author.bot && msg.content.substr(0, cfg.prefix.length) === cfg.prefix) {
-        console.log(msg)
-    }
-});
+// bot.on('message', msg => {
+//     if (!msg.author.bot && msg.content.substr(0, cfg.prefix.length) === cfg.prefix) {
+//         console.log(msg)
 
-bot.login(process.env.DISCORD_APP_TOKEN).then(() => {
-    console.log('Running discord!');
-});
+//     }
+// });
+
+// bot.login(process.env.DISCORD_APP_TOKEN).then(() => {
+//     console.log('Running discord!');
+// });
+
+
+try {
+DiscordConnector.load();
+    // WikiaChatConnector.login();
+    // DiscordConnector.socket.connect();
+}
+catch (e) {
+    console.log(e);
+}
 
 module.exports = core;
