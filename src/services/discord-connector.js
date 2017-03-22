@@ -46,14 +46,15 @@ var DiscordConnector = {
                 };
             }
         }
-    }
+    },
 
-//     send: function (channelID, message) {
-//         this.socket.reply({
-//             'to': channelID,
-//             'message': message
-//         });
-//     }
+    send: function (channelID, message) {
+        // this.socket.sendMessage({
+        //     'to': channelID,
+        //     'message': message
+        // });
+    this.socket.sendMessage(channelID, message);
+    }
 };
 
 module.exports = DiscordConnector;
