@@ -1,8 +1,0 @@
-{
-  "name": "tyler-bot",
-  "prefix": "!ty ",
-  "adminIds": ["#userId#"],
-  "options": {
-    "beautifyJson": false
-  }
-}
