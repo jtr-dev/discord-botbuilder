@@ -12,7 +12,6 @@ class DiscordConnector {
     }
 
     load() {
-        // this.directLineConnector = new DirectLineConnector()
         this.client = new Discord.Client()
         this.client.login(this.token)
         this.subscribe();
@@ -31,9 +30,9 @@ class DiscordConnector {
 
         if (name !== process.env.DISCORD_BOT_NAME) {
             let tag, msg;
-            // <@260462900307689473>
-            if (message.includes('<@260462900307689473>')) {
-                const split = message.split('<@260462900307689473>')
+
+            if (message.includes(process.env.TAG_HASH)) {
+                const split = message.split(process.env.TAG_HASH)
                 tag = 'tag'
                 msg = split[1]
             } else {

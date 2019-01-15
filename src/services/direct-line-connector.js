@@ -21,7 +21,6 @@ class DirectLineConnector {
             type: 'message',
             text: msg
         }).subscribe(id => {
-            console.log('activity posted', id);
             this.channels = [...this.channels, id];
         });
     }
@@ -29,7 +28,7 @@ class DirectLineConnector {
         this.directLine.activity$
             .filter(activity => activity.type === 'message' &&
             activity.from.id === process.env.MICROSOFT_BOT_NAME).subscribe(message => {
-            this.user.reply(`receiver ${message.text}`);
+            this.user.reply(message.text);
         });
     }
     status() {
