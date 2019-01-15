@@ -7,11 +7,11 @@
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Tyler Roberts me@teachtyler.com",
+  "license": "MIT",
   "dependencies": {
     "botbuilder": "3.7.0",
-    "discord-botbuilder": "file:../discord-botbuilder",
+    "discord-botbuilder": "1.1.0",
     "dotenv": "6.2.0",
     "express": "4.15.2",
     "ws": "^6.1.2",
