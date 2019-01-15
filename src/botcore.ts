@@ -5,7 +5,9 @@ import { goodbye, gracias, greetings, help, none, personal, rude, teaching } fro
 // todo: move this, without breaking process.env
 require('dotenv').config();
 
-import { DiscordConnector } from './services/discord-connector'
+// import { DiscordConnector } from './services/discord-connector'
+
+import { DiscordConnector } from 'discord-botbuilder';
 
 var core: any = {};
 
@@ -19,10 +21,9 @@ core.connector = new builder.ChatConnector({
 core.bot = new builder.UniversalBot(core.connector);
 // core.bot.set('localizerSettings', { defaultLocale: "en" })
 
-// core.bot.name = process.env.DISCORD_BOT_NAME;
-
 // Anytime the major version is incremented any existing conversations will be restarted.
 core.bot.use(builder.Middleware.dialogVersion({ version: 1.0, resetCommand: /^reset/i }));
+
 new DiscordConnector({
     token: process.env.DISCORD_APP_TOKEN
 });

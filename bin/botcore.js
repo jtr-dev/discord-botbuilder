@@ -5,7 +5,8 @@ const scenario = require('./dialogs');
 const dialogs_1 = require("./dialogs");
 // todo: move this, without breaking process.env
 require('dotenv').config();
-const discord_connector_1 = require("./services/discord-connector");
+// import { DiscordConnector } from './services/discord-connector'
+const discord_botbuilder_1 = require("discord-botbuilder");
 var core = {};
 exports.core = core;
 core.model = process.env.LUIS_MODEL_API;
@@ -17,10 +18,9 @@ core.connector = new builder.ChatConnector({
 });
 core.bot = new builder.UniversalBot(core.connector);
 // core.bot.set('localizerSettings', { defaultLocale: "en" })
-// core.bot.name = process.env.DISCORD_BOT_NAME;
 // Anytime the major version is incremented any existing conversations will be restarted.
 core.bot.use(builder.Middleware.dialogVersion({ version: 1.0, resetCommand: /^reset/i }));
-new discord_connector_1.DiscordConnector({
+new discord_botbuilder_1.DiscordConnector({
     token: process.env.DISCORD_APP_TOKEN
 });
 core.bot.dialog('/', core.dialog)

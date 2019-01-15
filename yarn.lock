@@ -8,6 +8,10 @@
   dependencies:
     symbol-observable "^1.0.1"
 
+"@types/node@^10.12.18":
+  version "10.12.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
+
 "@types/node@^6.0.0":
   version "6.14.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.14.2.tgz#40b3dbb1221c7d66802cbcc32fe3b85e54569c77"
@@ -201,6 +205,18 @@ depd@~1.1.0, depd@~1.1.2:
 destroy@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
+
+"discord-botbuilder@file:../discord-botbuilder":
+  version "1.0.8"
+  dependencies:
+    "@reactivex/rxjs" "5.2.0"
+    botframework-directlinejs "0.10.2"
+    discord.js "11.0.0"
+    dotenv "6.2.0"
+    express "4.15.2"
+    rxjs "^6.3.3"
+    ws "^6.1.2"
+    xhr2 "^0.1.4"
 
 discord.js@11.0.0:
   version "11.0.0"
@@ -658,7 +674,7 @@ repeating@^1.1.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@^2.69.0, request@^2.88.0:
+request@^2.69.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   dependencies:
@@ -838,6 +854,10 @@ type-is@~1.6.14:
 typedarray@~0.0.5:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
+
+typescript@3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
 
 ultron@1.0.x:
   version "1.0.2"
