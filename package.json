@@ -1,24 +1,43 @@
 {
+<<<<<<< HEAD
   "name": "discord-botbuilder",
   "version": "1.0.9",
   "description": "Connect bot framework bot to discord :zap:",
   "main": "./lib/index.js",
+=======
+  "name": "tyler-discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./bin/server.js",
+>>>>>>> 8a1466b48f601be7eb147930e293980ea74be769
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tyler Roberts me@teachtyler.com",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "@reactivex/rxjs": "5.2.0",
     "botframework-directlinejs": "0.10.2",
     "discord.js": "11.0.0",
     "dotenv": "6.2.0",
     "express": "4.15.2",
     "rxjs": "^6.3.3",
+=======
+    "botbuilder": "3.7.0",
+    "discord-botbuilder": "file:../discord-botbuilder",
+    "dotenv": "6.2.0",
+    "express": "4.15.2",
+>>>>>>> 8a1466b48f601be7eb147930e293980ea74be769
     "ws": "^6.1.2",
     "xhr2": "^0.1.4"
   },
   "devDependencies": {
+<<<<<<< HEAD
+=======
+    "@types/node": "^10.12.18",
+>>>>>>> 8a1466b48f601be7eb147930e293980ea74be769
     "typescript": "3.2.2"
   }
 }
