@@ -9,10 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@reactivex/rxjs": "5.2.0",
     "botbuilder": "3.7.0",
-    "express": "4.15.2",
+    "botframework-directlinejs": "0.10.2",
     "discord.js": "11.0.0",
-    "botframework-directlinejs": "0.9.4",
-    "@reactivex/rxjs": "5.2.0"
+    "dotenv": "6.2.0",
+    "express": "4.15.2",
+    "request": "^2.88.0",
+    "rxjs": "^6.3.3",
+    "ws": "^6.1.2",
+    "xhr2": "^0.1.4"
   }
 }

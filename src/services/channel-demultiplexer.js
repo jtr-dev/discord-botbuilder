@@ -4,12 +4,17 @@ var DiscordConnector = require('./discord-connector.js');
 
 var Demultiplexer = {};
 
-Demultiplexer.send = function (session, msg) {
+Demultiplexer.send = function (session, msg, onDefault) {
+    console.log(session, msg)
+    if (onDefault) {
+        session.send(msg)
+        return;
+    }
     var conversationId = JSON.stringify(session.message.address.conversation.id);
     var channel = ChannelMap.get(conversationId);
     console.log(conversationId)
     try {
-        DiscordConnector.send(channel.id, msg);
+        DiscordConnector.send(msg);
     }
     catch (e) {
         session.send(msg);

@@ -1,18 +1,17 @@
 const builder = require('botbuilder'),
-    entity = require('./../entities'),
-    disc = require('./../services/channel-demultiplexer');
+    entity = require('./../entities')
 
 // Move helper functions and data
 
 var helpData = {
     "commands": {
-        "info": "commands info"
+        "info": "todo: commands info"
     },
     "creator": {
-        "info": "creator info"
+        "info": "Tyler Roberts created this madness"
     },
     "code": {
-        "info": "code info"
+        "info": "it's written in Node.js"
     }
 }
 
@@ -33,20 +32,15 @@ const help = [
         session.userData.ntt = checkEntities(entities)
         if (session.userData.ntt === undefined) {
             builder.Prompts.choice(session, "What would you like to know more about?", "commands|creator|code")
-            disc.send(session, "What would you like to know more about?  commands|creator|code" )
+            // session.send(session, "What would you like to know more about?  commands|creator|code" )
         } else {
             next();
         }
     },
     function (session, results) {
         if (results.response) {
-            var choice = helpData[results.response.entity.toLowerCase()]
-            // session.send(choice.info)
-            disc.send(session, choice.info)
-        } else {
-            var choice = helpData[session.userData.ntt.entity.toLowerCase()]
-            // session.send(choice.info)
-            disc.send(session, choice.info)
+            var choice = helpData[results.response.entity.toLowerCase()] || helpData[session.userData.ntt.entity.toLowerCase()]
+            session.send(choice.info)
         }
     }
 ]

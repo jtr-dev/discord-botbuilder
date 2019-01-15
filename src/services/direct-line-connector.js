@@ -1,116 +1,55 @@
-var https = require('https');
-var Channel = require('./channel-map.js');
-// var DirectLine = require('botframework-directlinejs').DirectLine;
-// var Rx = require('@reactivex/rxjs');
-
-// var directLine = new DirectLine({
-//     secret: process.env.BOT_FRAMEWORK_DIRECT_API_PASSWORD,
-//     // token: ''/* or put your Direct Line token here (supply secret OR token, not both) */,
-//     // domain: '' /* optional: if you are not using the default Direct Line endpoint, e.g. if you are using a region-specific endpoint, put its full URL here */
-//     // webSocket: '' /* optional: false if you want to use polling GET to receive messages. Defaults to true (use WebSocket). */,
-//     // pollingInterval:  /* optional: set polling interval in milliseconds. Default to 1000 */,
-// });
-
-// var DirectLineConnector = {
-//   watermark: '0',
-//   conversation: function (channel) {
-//     var options = {
-//       host: 'directline.botframework.com',
-//       path: '/api/conversations',
-//       method: 'POST',
-//       headers:
-//       {
-//         'Authorization': 'BotConnector ' + (process.env.BOT_FRAMEWORK_DIRECT_API_PASSWORD),
-//       }
-//     };
-//     var post = https.request(options, function (res) {
-//       var body = '';
-//       res.on('data', function (chunk) { body += chunk; });
-//       res.on('end', function () {
-//         Channel.add(this.channel,JSON.parse(body).conversationId);
-//       }.bind({ channel: this.channel }));
-//     }.bind({ channel: channel }));
-//     post.end();
-//   },
-//   send: function (conversationId, user, text) {
-//     Rx.Observable.of(directLine.postActivity({
-//     from: { id: conversationId, name: user }, // required (from.name is optional)
-//     type: 'message',
-//     text: text
-//     })).subscribe(
-//     (id) => console.log("Posted activity, assigned ID ", id),
-//     (error) => console.log("Error posting activity", error)
-//     );
-
-//     Rx.Observable.of(directLine.activity$)
-//       .filter(activity => activity.type === 'message')
-//       .subscribe(
-//         (activity) => console.log("received activity ", activity)
-//       );
-//   }
-// }
-
-
-
-var DirectLineConnector = {
-  watermark: '0',
-  conversation: function (channel) {
-    var options = {
-      host: 'directline.botframework.com',
-      path: '/api/conversations',
-      method: 'POST',
-      headers:
-      {
-        'Authorization': 'BotConnector ' + (process.env.BOT_FRAMEWORK_DIRECT_API_PASSWORD),
-      }
-    };
-    var post = https.request(options, function (res) {
-      var body = '';
-      res.on('data', function (chunk) { body += chunk; });
-      res.on('end', function () {
-        Channel.add(this.channel,JSON.parse(body).conversationId);
-      }.bind({ channel: this.channel }));
-    }.bind({ channel: channel }));
-    post.end();
-  },
-  send: function (conversationId, user, text) {
-    var payload = JSON.stringify({
-      "conversationId": conversationId,
-      "from": user,
-      "text": text
-    });
-    var options = {
-      host: 'directline.botframework.com',
-      path: '/api/conversations/' + conversationId + '/messages',
-      method: 'POST',
-      headers:
-      {
-        'Authorization': 'BotConnector ' + (process.env.BOT_FRAMEWORK_DIRECT_API_PASSWORD),
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(payload)
-      }
-    };
-    var post = https.request(options, function () {
-     
-    })
-    post.write(payload);
-    post.end();
-  },
-  get: function (conversation) {
-    https.get({
-      hostname: 'directline.botframework.com',
-      path: '/api/conversations/' + conversation + '/messages',
-      headers: {
-        'authorization': 'BotConnector ' + (process.env.BOT_FRAMEWORK_DIRECT_API_PASSWORD),
-        'watermark': this.watermark,
-        agent: false
-      }
-    }, (res) => {
-      var body = '';
-      res.on('data', function (chunk) { body += chunk; });
-      res.on('end', function () { });
-    });
-  }
-};
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const botframework_directlinejs_1 = require("botframework-directlinejs");
+class DirectLineConnector {
+    constructor(user, name, guild, channel) {
+        this.channels = [];
+        this.user = user;
+        this.name = name;
+        this.guild = guild;
+        this.channel = channel;
+        this.directLine = new botframework_directlinejs_1.DirectLine({
+            secret: process.env.BOT_FRAMEWORK_DIRECT_API_PASSWORD,
+        });
+    }
+    send(msg) {
+        return this.directLine.postActivity({
+            from: {
+                id: `${this.name}-${this.guild}-${this.channel}`,
+                name: `${this.name}-${this.guild}-${this.channel}`
+            },
+            type: 'message',
+            text: msg
+        }).subscribe(id => {
+            console.log('activity posted', id);
+            this.channels = [...this.channels, id];
+        });
+    }
+    receiver() {
+        this.directLine.activity$
+            .filter(activity => activity.type === 'message' &&
+            activity.from.id === process.env.MICROSOFT_BOT_NAME).subscribe(message => {
+            this.user.reply(`receiver ${message.text}`);
+        });
+    }
+    status() {
+        this.directLine.connectionStatus$
+            .subscribe((connectionStatus) => {
+            switch (connectionStatus) {
+                case botframework_directlinejs_1.ConnectionStatus.Uninitialized: // the status when the DirectLine object is first created/constructed
+                case botframework_directlinejs_1.ConnectionStatus.Connecting: // currently trying to connect to the conversation
+                case botframework_directlinejs_1.ConnectionStatus.Online: // successfully connected to the converstaion. Connection is healthy so far as we know.
+                    console.log(botframework_directlinejs_1.ConnectionStatus[connectionStatus]);
+                    break;
+                case botframework_directlinejs_1.ConnectionStatus.ExpiredToken: // last operation errored out with an expired token. Your app should supply a new one.
+                case botframework_directlinejs_1.ConnectionStatus.FailedToConnect: // the initial attempt to connect to the conversation failed. No recovery possible.
+                    console.log(botframework_directlinejs_1.ConnectionStatus[connectionStatus]);
+                    break;
+                case botframework_directlinejs_1.ConnectionStatus.Ended: // the bot ended the conversation
+                    console.log(botframework_directlinejs_1.ConnectionStatus[connectionStatus]);
+                    break;
+            }
+        });
+    }
+}
 module.exports = DirectLineConnector;
