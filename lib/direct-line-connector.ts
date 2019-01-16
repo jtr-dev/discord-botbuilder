@@ -1,15 +1,16 @@
+import * as Discord from 'discord.js';
 import { DirectLine, ConnectionStatus } from 'botframework-directlinejs';
 
 export class DirectLineConnector {
-  directLine: any;
-  user: any;
-  name: any;
-  text: any;
-  guild: any;
-  channel: any;
-  channels: any = [];
+  directLine: DirectLine;
+  user: Discord.User;
+  name: string;
+  text!: string;
+  guild: string;
+  channel: string;
+  channels: string[] = [];
 
-  constructor(user, name, guild, channel) {
+  constructor(user: Discord.User, name: string, guild: string, channel: string) {
     this.user = user;
     this.name = name;
     this.guild = guild;
@@ -20,7 +21,7 @@ export class DirectLineConnector {
   }
 
   send(msg) {
-    return this.directLine.postActivity({
+    this.directLine.postActivity({
       from: {
         id: `${this.name}-${this.guild}-${this.channel}`,
         name: `${this.name}-${this.guild}-${this.channel}`
@@ -39,7 +40,7 @@ export class DirectLineConnector {
           activity.from.id === process.env.MICROSOFT_BOT_NAME
       ).subscribe(
         message => {
-          this.user.reply(message.text)
+          this.user.reply(message['text'])
         }
       );
   }

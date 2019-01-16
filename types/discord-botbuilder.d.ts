@@ -1,19 +1,20 @@
+import * as Discord from 'discord.js';
+
 export class DirectLineConnector {
-    constructor(user: any, name: any, guild: any, channel: any);
-    channels: any;
-    user: any;
-    name: any;
-    guild: any;
-    channel: any;
-    directLine: any;
+    constructor(user: Discord.User, name: any, guild: any, channel: any);
+    name: string;
+    guild: string;
+    channel: string;
+    channels: string[];
     receiver(): void;
-    send(msg: any): any;
+    send(msg: string): void;
     status(): void;
 }
+
 export class DiscordConnector {
-    constructor({ token }: any);
-    token: any;
-    channels: any;
+    constructor({ token }: { token: string | undefined });
+    token: string;
+    channels: DirectLineConnector[];
     load(): void;
     multiplex(user: any): void;
     subscribe(): void;
