@@ -4,7 +4,7 @@ import { DirectLineConnector } from './direct-line-connector'
 export class DiscordConnector {
     token: string | undefined;
     client!: Discord.Client;
-    session!: DirectLineConnector;
+    session?: DirectLineConnector;
     channels: DirectLineConnector[];
     constructor({ token }: { token: string | undefined }) {
         this.token = token;
@@ -29,7 +29,8 @@ export class DiscordConnector {
         this.client.on('message', this.multiplex.bind(this));
     }
 
-    multiplex(user) {
+    multiplex(message) {
+        console.log(message)
         const { TAG, TAG_HASH, DISCORD_BOT_NAME } = process.env
 
         if (!TAG || !TAG_HASH || !DISCORD_BOT_NAME) {
@@ -39,38 +40,41 @@ export class DiscordConnector {
             `);
         }
 
-        const guild = user.guild.id;
-        const channel = user.channel.name;
-        const name = user.author.username;
-        const message = user.content;
+        const name = message.author.username;
+        const content = message.content;
+        const guild = message.guild.id;
+        const channel = message.channel.name;
 
-        if (name !== DISCORD_BOT_NAME && (message.includes(TAG_HASH) || message.includes(TAG))) {
+        if (name !== DISCORD_BOT_NAME && (content.includes(TAG_HASH) || content.includes(TAG))) {
             let tag: string, msg: string;
 
-            if (message.startsWith("<@")) {
-                const split = message.split(TAG_HASH)
+            if (content.startsWith("<@")) {
+                const split = content.split(TAG_HASH)
                 tag = TAG
                 msg = split[1]
             } else {
-                tag = message.slice(0, TAG.length)
-                msg = message.slice(TAG.length + 1)
+                tag = content.slice(0, TAG.length)
+                msg = content.slice(TAG.length)
             }
             if (tag === TAG && msg) {
-                if (!this.session) {
-                    this.session = new DirectLineConnector(user, name, guild, channel)
-                }
-                if (this.session && this.session.channels) {
-                    const relevant = this.channels.find(c => c.name === name && c.channel === channel && c.guild === guild)
-                    if (!relevant) {
-                        this.session = new DirectLineConnector(user, name, guild, channel)
-                        this.session.receiver();
-                    } else {
-                        this.session = relevant;
-                    }
-                }
-                this.session.send(msg)
-                this.channels = [...this.channels, this.session]
+                const relevant = this.channels.find(c => c.name === name && c.channel === channel && c.guild === guild)
+                this.tenor(message, { msg, name, guild, channel }, relevant)
             }
         }
+    }
+
+    tenor(
+        message: Discord.Message,
+        user: { msg: string, name: string, guild: string, channel: string },
+        relevant: DirectLineConnector | undefined
+    ): void {
+        if (relevant) {
+            this.session = relevant
+        } else {
+            this.session = new DirectLineConnector(message, user)
+            this.session.receiver();
+            this.channels = [...this.channels, this.session]
+        }
+        this.session.send(user.msg)
     }
 };
