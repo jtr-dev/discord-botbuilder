@@ -30,24 +30,32 @@ export class DiscordConnector {
     }
 
     multiplex(user) {
+        const { TAG, TAG_HASH, DISCORD_BOT_NAME } = process.env
+
+        if (!TAG || !TAG_HASH || !DISCORD_BOT_NAME) {
+            throw new Error(`
+                Verify environment variables are setup correctly =>  
+                TAG: ${TAG} TAG_HASH: ${TAG_HASH} DISCORD_BOT_NAME: ${DISCORD_BOT_NAME}
+            `);
+        }
+
         const guild = user.guild.id;
         const channel = user.channel.name;
         const name = user.author.username;
         const message = user.content;
 
-
-        if (name !== process.env.DISCORD_BOT_NAME && (message.includes(process.env.TAG_HASH) || message.includes(process.env.TAG))) {
-            let tag, msg;
+        if (name !== DISCORD_BOT_NAME && (message.includes(TAG_HASH) || message.includes(TAG))) {
+            let tag: string, msg: string;
 
             if (message.startsWith("<@")) {
-                const split = message.split(process.env.TAG_HASH)
-                tag = 'tag'
+                const split = message.split(TAG_HASH)
+                tag = TAG
                 msg = split[1]
             } else {
-                tag = message.slice(0, 3)
-                msg = message.slice(4)
+                tag = message.slice(0, TAG.length)
+                msg = message.slice(TAG.length + 1)
             }
-            if (tag === process.env.TAG || tag === 'tag') {
+            if (tag === TAG && msg) {
                 if (!this.session) {
                     this.session = new DirectLineConnector(user, name, guild, channel)
                 }
